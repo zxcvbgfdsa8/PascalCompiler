@@ -1,0 +1,36 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package compiler.message;
+
+import compiler.message.Message;
+import java.util.ArrayList;
+import compiler.message.MessageListener;
+
+/**
+ *
+ * @author jamey
+ */
+public class MessageHandler {
+    private Message message;
+    private ArrayList<MessageListener> listeners;
+    public MessageHandler() {
+        this.listeners = new ArrayList<MessageListener>();        
+    }
+    public void addListener(MessageListener listener) {
+        listeners.add(listener);
+    }
+    public void removeListener(MessageListener listener) {
+        listeners.remove(listener);
+    }            
+    public void sendMessage(Message message) {
+        this.message = message;
+        notifyListeners();        
+    }
+    private void notifyListeners() {
+        for (MessageListener listener : listeners) {
+            listener.messageReceived(message);
+        }
+    }
+}

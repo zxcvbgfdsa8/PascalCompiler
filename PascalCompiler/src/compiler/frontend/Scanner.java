@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package pascalcompiler.frontend;
+package compiler.frontend;
 
 /**
  *
  * @author jamey
  */
-public class Scanner {
+public abstract class Scanner {
     protected Source source;
     private Token currentToken;
     

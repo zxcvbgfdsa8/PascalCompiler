@@ -2,8 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package pascalcompiler.frontend;
+package compiler.frontend;
 
+import compiler.message.MessageType;
+import compiler.message.MessageProducer;
+import compiler.message.MessageListener;
+import compiler.message.MessageHandler;
+import compiler.message.Message;
 import java.io.BufferedReader;
 import java.io.IOException;
 
@@ -11,10 +16,13 @@ import java.io.IOException;
  *
  * @author jamey
  */
-public class Source {
+public class Source implements MessageProducer {
 
     public static final char EOL = '\n';
     public static final char EOF = (char) 0;
+    
+    protected static MessageHandler messageHandler;
+    
     private BufferedReader reader;
     private String line;
     private int lineNum;
@@ -24,10 +32,11 @@ public class Source {
         this.lineNum = 0;
         this.currentPos = -2;
         this.reader = reader;
+        messageHandler = new MessageHandler();
     }
 
     public char currentChar() throws Exception {
-        if (currentPos == -1) {
+        if (currentPos == -2) {            
             readLine();
             return nextChar();
         } else if (line == null) {
@@ -60,6 +69,10 @@ public class Source {
         if (line != null) {
             ++lineNum;
         }
+        
+        if (line != null) {
+            sendMessage(new Message(MessageType.SOURCE_LINE, new Object[] {lineNum, line}));
+        }
     }
 
     public void close() throws Exception {
@@ -79,4 +92,28 @@ public class Source {
     public int getPosition() {
         return currentPos;
     }
+    /**
+     *
+     * @param listener
+     */
+    @Override
+   public void addMessageListener(MessageListener listener) {
+       messageHandler.addListener(listener);
+   }
+    /**
+     *
+     * @param listener
+     */
+    @Override
+   public void removeMessageListener(MessageListener listener) {
+       messageHandler.removeListener(listener);
+   }
+    /**
+     *
+     * @param message
+     */
+    @Override
+   public void sendMessage(Message message) {
+       messageHandler.sendMessage(message);
+   }
 }
