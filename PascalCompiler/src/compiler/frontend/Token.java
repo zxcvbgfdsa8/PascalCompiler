@@ -40,5 +40,18 @@ public class Token {
     public int getLineNumber() {
         return this.lineNum;
     }
+
+    public TokenType getType() {
+        return type;
+    }
+    public int getPosition() {
+        return position;
+    }
+    public String getText() {
+        return text;
+    }
+    public Object getValue() {
+        return value;        
+    }
     
 }
