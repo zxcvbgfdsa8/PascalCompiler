@@ -31,8 +31,7 @@ public class PascalScanner extends Scanner
      * @return the next token.
      * @throws Exception if an error occurred.
      */
-    public  Token extractToken()
-        throws Exception
+    public  Token extractToken() throws Exception
     {
         skipWhiteSpace();
 

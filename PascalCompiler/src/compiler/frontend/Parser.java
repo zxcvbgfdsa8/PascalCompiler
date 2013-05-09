@@ -11,15 +11,17 @@ import compiler.message.Message;
 
 import compiler.intermediate.ICode;
 import compiler.intermediate.SymTab;
+import compiler.intermediate.SymTabFactory;
+import compiler.intermediate.SymTabStack;
 /**
  *
  * @author jamey
  */
 public abstract class Parser implements MessageProducer {
-   protected static SymTab symTab;   
+   protected static SymTabStack symTabStack;   
    protected static MessageHandler messageHandler;
    static {
-       symTab = null;       
+       symTabStack = SymTabFactory.createSymTabStack();       
        messageHandler = new MessageHandler();
    }
    
@@ -51,7 +53,7 @@ public abstract class Parser implements MessageProducer {
         return iCode;
     }
 
-    public SymTab getSymTab() {
-        return symTab;
+    public SymTabStack getSymTabStack() {
+        return symTabStack;
     }
 }
