@@ -11,6 +11,7 @@ import compiler.frontend.*;
 import compiler.intermediate.*;
 import compiler.backend.*;
 import compiler.message.*;
+import compiler.util.*;
 import static compiler.frontend.pascal.PascalTokenType.STRING;
 import static compiler.message.MessageType.INTERPRETER_SUMMARY;
 import static compiler.message.MessageType.PARSER_SUMMARY;
@@ -24,7 +25,7 @@ public class Pascal {
     private Parser parser;
     private Source source;
     private ICode iCode;
-    private SymTab symTab;
+    private SymTabStack symTabStack;
     private Backend backend;
     /**
      * @param args the command line arguments
@@ -47,9 +48,12 @@ public class Pascal {
             source.close();
             
             iCode = parser.getICode();
-            symTab = parser.getSymTab();
-            
-            backend.process(iCode, symTab);
+            symTabStack = parser.getSymTabStack();
+            if (xref) {
+                CrossReferencer crossReferencer = new CrossReferencer();
+                crossReferencer.print(symTabStack);
+            }
+            backend.process(iCode, symTabStack);
             
         } catch (Exception ex) {
             System.out.println("*********Internal translation error. *********");
@@ -75,7 +79,7 @@ public class Pascal {
             if (i < args.length) {
                String path = args[i];
                System.out.println(path);
-               new Pascal(operation, path, flags);                           
+               Pascal pascal = new Pascal(operation, path, flags);                           
            } else {
                 throw new Exception();
            }                        
@@ -123,6 +127,7 @@ public class Pascal {
          * Called by the parser whenever it produces a message.
          * @param message the message.
          */
+        @Override
         public void messageReceived(Message message)
         {
             MessageType type = message.getType();

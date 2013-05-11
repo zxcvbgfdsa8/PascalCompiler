@@ -5,7 +5,7 @@
 package compiler.backend.interpreter;
 import compiler.backend.Backend;
 import compiler.intermediate.ICode;
-import compiler.intermediate.SymTab;
+import compiler.intermediate.SymTabStack;
 import compiler.message.Message;
 import compiler.message.MessageListener;
 
@@ -17,7 +17,7 @@ import static compiler.message.MessageType.INTERPRETER_SUMMARY;
 public class Executor extends Backend {
 
     @Override
-    public void process(ICode iCode, SymTab symTab) throws Exception {
+    public void process(ICode iCode, SymTabStack symTabStack) throws Exception {
         long startTime = System.currentTimeMillis();
         float elapsedTime = (System.currentTimeMillis() - startTime)/1000f;
         int executionCount = 0;

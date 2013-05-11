@@ -6,7 +6,7 @@ package compiler.backend;
 
 import compiler.message.MessageProducer;
 import compiler.message.MessageHandler;
-import compiler.intermediate.SymTab;
+import compiler.intermediate.SymTabStack;
 import compiler.intermediate.ICode;
 import compiler.message.Message;
 import compiler.message.MessageListener;
@@ -21,10 +21,10 @@ public abstract class Backend implements MessageProducer {
     static {
         messageHandler = new MessageHandler();
     }
-    protected SymTab symTab;
+    protected SymTabStack symTabStack;
     protected ICode iCode;
     
-    public abstract void process(ICode iCode, SymTab symTab) throws Exception;
+    public abstract void process(ICode iCode, SymTabStack symTabStack) throws Exception;
     public void addMessageListener(MessageListener listener) {
        messageHandler.addListener(listener);
     }
