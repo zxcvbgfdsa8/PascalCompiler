@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package compiler.intermediate;
 
 /**
@@ -9,5 +5,6 @@ package compiler.intermediate;
  * @author jamey
  */
 public interface ICode {
-    
+    public ICodeNode setRoot(ICodeNode node);
+    public ICodeNode getRoot();
 }
