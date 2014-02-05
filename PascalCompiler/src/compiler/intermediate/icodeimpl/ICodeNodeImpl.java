@@ -29,12 +29,15 @@ public class ICodeNodeImpl extends HashMap<ICodeKey, Object> implements ICodeNod
         }
         return node;
     }
+    @Override
     public void setAttribute(ICodeKey key, Object value) {
         put(key,value);
     }
+    @Override
     public Object getAttribute(ICodeKey key) {
         return get(key);
     }
+    @Override
     public ICodeNode copy() {
         ICodeNodeImpl copy = (ICodeNodeImpl) ICodeFactory.createICodeNode(type);
         Set<Map.Entry<ICodeKey, Object>> attributes = entrySet();
@@ -46,15 +49,19 @@ public class ICodeNodeImpl extends HashMap<ICodeKey, Object> implements ICodeNod
         }
         return copy;                
     }
+    @Override
     public String toString() {
         return type.toString();
     }
+    @Override
     public ICodeNodeType getType() {
         return type;
     }
+    @Override
     public ICodeNode getParent() {
         return parent;
     }
+    @Override
     public ArrayList<ICodeNode> getChildren() {
         return children;
     }
