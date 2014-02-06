@@ -3,7 +3,9 @@
  * and open the template in the editor.
  */
 package compiler.frontend.pascal;
+
 import compiler.frontend.*;
+import compiler.frontend.pascal.parsers.*;
 import compiler.intermediate.*;
 import compiler.message.Message;
 
@@ -15,7 +17,7 @@ import static compiler.intermediate.symtabimpl.SymTabKeyImpl.*;
  *
  * @author jamey
  */
-public class PascalParserTD extends Parser{
+public class PascalParserTD extends Parser {
     protected static PascalErrorHandler errorHandler = new PascalErrorHandler();
     
     public PascalParserTD(Scanner scanner) {
@@ -23,36 +25,33 @@ public class PascalParserTD extends Parser{
     }
     @Override
     public void parse() throws Exception {
-        Token token;
+        
         long startTime = System.currentTimeMillis();
-
+        iCode = ICodeFactory.createICode();
+        
         try {
-            // Loop over each token until the end of file.
-            while (!((token = nextToken()) instanceof EofToken)) {
-                TokenType tokenType = token.getType();
-
-                // Cross reference only the identifiers.
-                if (tokenType == IDENTIFIER) {
-                    String name = token.getText().toLowerCase();
-
-                    // If it's not already in the symbol table,
-                    // create and enter a new entry for the identifier.
-                    SymTabEntry entry = symTabStack.lookup(name);
-                    if (entry == null) {
-                        entry = symTabStack.enterLocal(name);
-                    }
-
-                    // Append the current line number to the entry.
-                    entry.appendLineNumber(token.getLineNumber());
-                }
-
-                else if (tokenType == ERROR) {
-                    errorHandler.flag(token, (PascalErrorCode) token.getValue(),
-                                      this);
-                }
+            Token token = nextToken();
+            ICodeNode rootNode = null;
+           
+            TokenType tokenType = token.getType();
+            
+            //Look for the start of the program
+            if(token.getType() == BEGIN) {
+                StatementParser statementParser = new StatementParser(this);
+                rootNode = statementParser.parse(token);
+                token = currentToken();
+            } else {
+                errorHandler.flag(token, UNEXPECTED_TOKEN, this);
             }
-
-            // Send the parser summary message.
+            //Look for the end of the program
+            if (token.getType() != DOT) {
+                errorHandler.flag(token, MISSING_PERIOD, this);
+            }
+            token = currentToken();
+            if (rootNode != null) {
+                iCode.setRoot(rootNode);
+            }
+                // Send the parser summary message.
             float elapsedTime = (System.currentTimeMillis() - startTime)/1000f;
             sendMessage(new Message(PARSER_SUMMARY,
                                     new Number[] {token.getLineNumber(),

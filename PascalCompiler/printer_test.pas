@@ -1,0 +1,6 @@
+BEGIN
+	alpha := 10;
+	beta  := 20;
+END.
+	
+	

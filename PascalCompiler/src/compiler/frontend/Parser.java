@@ -33,18 +33,24 @@ public abstract class Parser implements MessageProducer {
    }
    public abstract void parse() throws Exception;
    public abstract int getErrorCount();
+   public Scanner getScanner() {
+       return scanner;
+   }
    public Token currentToken() {
     return scanner.currentToken();
    }
    public Token nextToken() throws Exception {
     return scanner.nextToken();
    }
+   @Override
    public void addMessageListener(MessageListener listener) {
        messageHandler.addListener(listener);
    }
+   @Override
    public void removeMessageListener(MessageListener listener) {
        messageHandler.removeListener(listener);
    }
+   @Override
    public void sendMessage(Message message) {
        messageHandler.sendMessage(message);
    }

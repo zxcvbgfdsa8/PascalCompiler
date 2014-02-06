@@ -65,4 +65,14 @@ public class ICodeNodeImpl extends HashMap<ICodeKey, Object> implements ICodeNod
     public ArrayList<ICodeNode> getChildren() {
         return children;
     }
+    @Override
+    public ICodeNode addChild(ICodeNode node)
+    {
+        if (node != null) {
+            children.add(node);
+            ((ICodeNodeImpl) node).parent = this;
+        }
+
+        return node;
+    }
 }
