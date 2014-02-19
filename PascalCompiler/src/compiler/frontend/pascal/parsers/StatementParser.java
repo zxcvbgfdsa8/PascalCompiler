@@ -47,12 +47,12 @@ public class StatementParser extends PascalParserTD {
                 break;
             }
 
-            /*case WHILE: {
+            case WHILE: {
                 WhileStatementParser whileParser = new WhileStatementParser(this);
                 statementNode = whileParser.parse(token);
                 break;
-            }
-            case FOR: {
+            }                
+            /*case FOR: {
                 ForStatementParser forParser = new ForStatementParser(this);
                 statementNode = forParser.parse(token);
                 break;
