@@ -4,6 +4,8 @@
  */
 package compiler.frontend.pascal.parsers;
 
+import java.util.EnumSet;
+
 import compiler.frontend.*;
 import compiler.frontend.pascal.*;
 import compiler.intermediate.*;
@@ -22,7 +24,11 @@ public class AssignmentStatementParser extends StatementParser{
     {
         super(parent);
     }
-    
+    private static final EnumSet<PascalTokenType> COLON_EQUALS_SET = ExpressionParser.EXPR_START_SET.clone();
+    static {
+        COLON_EQUALS_SET.add(COLON_EQUALS);
+        COLON_EQUALS_SET.addAll(StatementParser.STMT_FOLLOW_SET);
+    }
     public ICodeNode parse(Token token) throws Exception
     {
         ICodeNode assignNode = ICodeFactory.createICodeNode(ASSIGN);
@@ -41,6 +47,7 @@ public class AssignmentStatementParser extends StatementParser{
 
         assignNode.addChild(variableNode);
 
+        token = synchronize(COLON_EQUALS_SET);
         if (token.getType() == COLON_EQUALS) {
             token = nextToken();  // consume the :=
         }

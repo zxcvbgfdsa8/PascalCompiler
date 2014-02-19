@@ -4,6 +4,8 @@
  */
 package compiler.frontend.pascal.parsers;
 
+import java.util.EnumSet;
+
 import compiler.frontend.*;
 import compiler.frontend.pascal.*;
 import compiler.intermediate.*;
@@ -22,6 +24,8 @@ public class StatementParser extends PascalParserTD {
     {
         super(parent.getScanner());
     }
+    protected static final EnumSet<PascalTokenType> STMT_START_SET = EnumSet.of(BEGIN, CASE, FOR, PascalTokenType.IF, REPEAT, WHILE, IDENTIFIER, SEMICOLON);
+    protected static final EnumSet<PascalTokenType> STMT_FOLLOW_SET = EnumSet.of(SEMICOLON, END, ELSE, UNTIL, DOT);
     
     public ICodeNode parse(Token token) throws Exception {
         ICodeNode statementNode = null;
@@ -35,6 +39,32 @@ public class StatementParser extends PascalParserTD {
             case IDENTIFIER: {
                 AssignmentStatementParser assignmentParser = new AssignmentStatementParser(this);
                 statementNode = assignmentParser.parse(token);
+                break;
+            }
+            case REPEAT: {
+                RepeatStatementParser repeatParser = new RepeatStatementParser(this);
+                statementNode = repeatParser.parse(token);
+                break;
+            }
+
+            case WHILE: {
+                WhileStatementParser whileParser = new WhileStatementParser(this);
+                statementNode = whileParser.parse(token);
+                break;
+            }
+            case FOR: {
+                ForStatementParser forParser = new ForStatementParser(this);
+                statementNode = forParser.parse(token);
+                break;
+            }
+            case IF: {
+                IfStatementParser ifParser = new IfStatementParser(this);
+                statementNode = ifParser.parse(token);
+                break;
+            }
+            case CASE: {
+                CaseStatementParser caseParser = new CaseStatementParser(this);
+                statementNode = caseParser.parse(token);
                 break;
             }
             default: {
@@ -54,6 +84,9 @@ public class StatementParser extends PascalParserTD {
         }
     }
     protected void parseList(Token token, ICodeNode parentNode, PascalTokenType terminator, PascalErrorCode errorCode) throws Exception {
+        EnumSet<PascalTokenType> terminatorSet = STMT_START_SET.clone();
+        terminatorSet.add(terminator);
+        
         while (!(token instanceof EofToken) && (token.getType() != terminator)) {
             ICodeNode statementNode = parse(token);
             parentNode.addChild(statementNode);
@@ -64,14 +97,10 @@ public class StatementParser extends PascalParserTD {
             if (tokenType == SEMICOLON) {
                 token = nextToken();  // consume the ;
             }
-            else if (tokenType == IDENTIFIER) {
+            else if (STMT_START_SET.contains(tokenType)) {
                 errorHandler.flag(token, MISSING_SEMICOLON, this);
             }
-
-            else if (tokenType != terminator) {
-                errorHandler.flag(token, UNEXPECTED_TOKEN, this);
-                token = nextToken();  // consume the unexpected token
-            }
+            token = synchronize(terminatorSet);
         }
 
         if (token.getType() == terminator) {

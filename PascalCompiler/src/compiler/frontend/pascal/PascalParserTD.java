@@ -4,6 +4,8 @@
  */
 package compiler.frontend.pascal;
 
+import java.util.EnumSet;
+
 import compiler.frontend.*;
 import compiler.frontend.pascal.parsers.*;
 import compiler.intermediate.*;
@@ -65,5 +67,16 @@ public class PascalParserTD extends Parser {
     @Override
     public int getErrorCount() {
         return errorHandler.getErrorCount();
+    }
+    public Token synchronize(EnumSet syncSet) throws Exception {
+        Token token = currentToken();
+        
+        if (!syncSet.contains(token.getType())) {
+            errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+            do {
+                token = nextToken();
+            } while (!(token instanceof EofToken) && !syncSet.contains(token.getType()));            
+        }
+        return token;
     }
 }
