@@ -52,7 +52,7 @@ public class StatementParser extends PascalParserTD {
                 statementNode = whileParser.parse(token);
                 break;
             }                
-            /*case FOR: {
+            case FOR: {
                 ForStatementParser forParser = new ForStatementParser(this);
                 statementNode = forParser.parse(token);
                 break;
@@ -62,7 +62,7 @@ public class StatementParser extends PascalParserTD {
                 statementNode = ifParser.parse(token);
                 break;
             }
-            case CASE: {
+            /*case CASE: {
                 CaseStatementParser caseParser = new CaseStatementParser(this);
                 statementNode = caseParser.parse(token);
                 break;
