@@ -62,11 +62,11 @@ public class StatementParser extends PascalParserTD {
                 statementNode = ifParser.parse(token);
                 break;
             }
-            /*case CASE: {
+            case CASE: {
                 CaseStatementParser caseParser = new CaseStatementParser(this);
                 statementNode = caseParser.parse(token);
                 break;
-            }*/
+            }
             default: {
                 statementNode = ICodeFactory.createICodeNode(NO_OP);
                 break;
