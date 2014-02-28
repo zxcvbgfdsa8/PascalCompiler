@@ -12,6 +12,8 @@ import compiler.intermediate.*;
 public class SymTabEntryImpl extends HashMap<SymTabKey, Object> implements SymTabEntry {
     private String name;
     private SymTab symTab;
+    private Definition definition;
+    private TypeSpec typeSpec;
     private ArrayList<Integer> lineNumbers;
     
     public SymTabEntryImpl(String name, SymTab symTab) {
@@ -36,5 +38,17 @@ public class SymTabEntryImpl extends HashMap<SymTabKey, Object> implements SymTa
     }
     public SymTab getSymTab() {
         return symTab;
+    }
+    public void setDefinition(Definition definition) {
+        this.definition = definition;
+    }
+    public Definition getDefinition() {
+        return definition;
+    }
+    public void setTypeSpec(TypeSpec typeSpec) {
+        this.typeSpec = typeSpec;
+    }
+    public TypeSpec getTypeSpec() {
+        return typeSpec;
     }
 }
